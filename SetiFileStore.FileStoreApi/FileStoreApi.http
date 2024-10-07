@@ -1,0 +1,10 @@
+@FileStoreApi_HostAddress = http://localhost:5065
+
+GET {{FileStoreApi_HostAddress}}/weatherforecast/
+Accept: application/json
+###
+
+GET {{FileStoreApi_HostAddress}}/api/file/info/purchase_request/6702c8754432056fe8cb18fa
+Accept: application/json
+
+

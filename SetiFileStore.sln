@@ -1,20 +1,25 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{6F8F6223-7FB1-4E0B-8B6A-66EA8AAB8817}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetiFileStore.Domain", "SetiFileStore.Domain\SetiFileStore.Domain.csproj", "{6F8F6223-7FB1-4E0B-8B6A-66EA8AAB8817}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{5A69F96D-234C-4B5F-9CB4-94FE2C1A2DD2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{43D92E8E-F2B1-404D-8F79-5091D12AA00B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileStoreApi", "FileStoreApi\FileStoreApi.csproj", "{AD963432-A4F2-49C1-BA53-E96F572C71CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetiFileStore.FileStoreApi", "SetiFileStore.FileStoreApi\SetiFileStore.FileStoreApi.csproj", "{AD963432-A4F2-49C1-BA53-E96F572C71CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{B249122C-A0A1-4325-8548-0B0994D2AD98}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetiFileStore.Infrastructure", "SetiFileStore.Infrastructure\SetiFileStore.Infrastructure.csproj", "{B249122C-A0A1-4325-8548-0B0994D2AD98}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{E5AA456C-4E82-4BC1-8FD2-C36BD400F474}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTesting", "ConsoleTesting\ConsoleTesting.csproj", "{223CD96D-D550-4E22-9C13-F9145EFE47EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileClient", "FileClient\FileClient.csproj", "{3303918C-D4A4-4007-ACFC-24862AE7033A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetiFileStore.FileClient", "SetiFileStore.FileClient\SetiFileStore.FileClient.csproj", "{3303918C-D4A4-4007-ACFC-24862AE7033A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E7AE33CE-F464-4FB2-BBED-C9CAF91DB859}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
