@@ -91,7 +91,7 @@ public class FileService {
                                          "Please check your appsettings.json file.");
         }
         //var requestStr=HttpConstants.FileDownloadPath.Replace("{appDomain}","purchase_request").Replace("{fileId}",fileId);
-        var requestStr=HttpConstants.FileInfoPath
+        var requestStr=HttpConstants.FileDownloadPath
             .Replace("{appDomain}",domain)
             .Replace("{fileId}",fileId);
         var response = await client.GetAsync(requestStr);
@@ -100,7 +100,7 @@ public class FileService {
             if (string.IsNullOrEmpty(fileName)) {
                 return null;
             }
-            await using var stream = await response.Content.ReadAsStreamAsync();
+            /*await using var stream = await response.Content.ReadAsB();*/
             var fileBytes = await response.Content.ReadAsByteArrayAsync();
             return new FileData(fileName,fileBytes);
         } else {

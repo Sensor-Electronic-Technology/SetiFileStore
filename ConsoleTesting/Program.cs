@@ -1,16 +1,14 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Text.Json;
 using SetiFileStore.Domain.Contracts.Requests;
 using SetiFileStore.Domain.Model;
-using SetiFileStore.FileClient;
-using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using SetiFileStore.Domain.Contracts;
+using SetiFileStore.FileClient;
 
-await CreateAppDomain();
+//await CreateAppDomain();
 //await DownloadFileTest();
 //await UploadFileTest();
 //await CheckFileInfoTest();
@@ -18,6 +16,15 @@ await CreateAppDomain();
 //await TestUploadFile_FileService();
 //await TestDeleteFile_FileService();
 //await TestUploadMultipleFile_FileService();
+var fileData=await DownloadFileTest();
+if(fileData!=null) {
+    await using var fs = File.Create("C:\\Users\\aelmendo\\Downloads\\"+fileData.Name);
+    await fs.WriteAsync(fileData.Data);
+    Console.WriteLine($"File Downloaded, Check downloads  File: {fileData.Name}");
+} else {
+    Console.WriteLine("File data null");
+}
+
 
 /*async Task CheckFileInfoTest() {
     var client = new HttpClient();
@@ -105,23 +112,38 @@ async Task CreateAppDomain() {
     await collection.InsertOneAsync(domain);
     Console.WriteLine("SetiFileStore.Domain inserted");
 }
-async Task DownloadFileTest() {
+async Task<FileData?> DownloadFileTest() {
     using var client = new HttpClient();
-    client.BaseAddress = new Uri("http://localhost:5065/api/");
-    var response = await client.GetAsync($"files/download/6702c8754432056fe8cb18fa?appDomain=purchase_request");
+    client.BaseAddress = new Uri("http://172.20.4.15:8080/");
+    var httpPath=HttpConstants.FileDownloadPath
+        .Replace("{appDomain}","purchase_request")
+        .Replace("{fileId}","6707d397b6699e1989a04023");
+    var response = await client.GetAsync(httpPath);
     response.EnsureSuccessStatusCode();
-    var fileName= response.Content.Headers?.ContentDisposition?.FileName;
-    if (string.IsNullOrEmpty(fileName)) {
-        return;
+    if (response.IsSuccessStatusCode) {
+        var fileName= response.Content.Headers?.ContentDisposition?.FileName;
+        //var responseText=await response.Content.ReadAsStringAsync();
+        //Console.WriteLine(responseText);
+        if (string.IsNullOrEmpty(fileName)) {
+            Console.WriteLine("Result Empty");
+            return null;
+        }
+        var fileInfo = new System.IO.FileInfo(fileName);
+        var bytes = await response.Content.ReadAsByteArrayAsync();
+        return new FileData(fileName, bytes);
+        /*await using var fs = File.Create("C:\\Users\\aelmendo\\Downloads\\"+fileInfo.Name);
+        await fs.WriteAsync(bytes);
+        Console.WriteLine($"File Downloaded, Check downloads  File: {fileInfo.Name}");*/
+        /*await using var ms = await response.Content.ReadAsStreamAsync();
+        var path = Path.Combine("C:\\Users\\aelmendo\\Downloads\\",fileInfo.Name);
+        await using var fs = File.Create(path);
+        ms.Seek(0, SeekOrigin.Begin);
+        await ms.CopyToAsync(fs);
+        Console.WriteLine("File Downloaded, Check downloads");*/
+    } else {
+        Console.WriteLine("Download Failed");
+        return null;
     }
-    var fileInfo = new System.IO.FileInfo(fileName);
-    await using var ms = await response.Content.ReadAsStreamAsync();
-    //append path here
-
-    var path = Path.Combine("C:\\Users\\aelmendo\\Downloads\\",fileInfo.Name);
-    await using var fs = File.Create(path);
-    ms.Seek(0, SeekOrigin.Begin);
-    await ms.CopyToAsync(fs);
 }
 
 async Task UploadFileTest() {

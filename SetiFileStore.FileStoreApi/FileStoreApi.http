@@ -7,4 +7,8 @@ Accept: application/json
 GET {{FileStoreApi_HostAddress}}/api/file/info/purchase_request/6702c8754432056fe8cb18fa
 Accept: application/json
 
+###
+GET http://172.20.4.15:8080/api/file/download/purchase_request/6707d397b6699e1989a04023
+Accept: multipart/form-data
+
 
