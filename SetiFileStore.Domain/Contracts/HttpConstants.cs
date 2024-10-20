@@ -9,5 +9,6 @@ public class HttpConstants {
     public static string FileDeletePath = "api/file/delete/{appDomain}/{fileId}";
     public static string FileDownloadPath = "/api/file/download/{appDomain}/{fileId}";
     public static string FileDownloadStreamPath = "/api/file/download/stream/{appDomain}/{fileId}";
+    public static string FileDownloadInlinePath = "/api/file/download/inline/{appDomain}/{fileId}";
     public static string FileInfoPath = "api/file/info/{appDomain}/{fileId}";
 }
