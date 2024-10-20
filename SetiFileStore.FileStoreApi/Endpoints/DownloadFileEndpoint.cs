@@ -38,6 +38,7 @@ public class DownloadFileEndpoint:Endpoint<FileDownloadRequest> {
             contentType = metadata.GetElement("ContentType").Value.ToString();
             fileName = metadata.GetElement("UntrustedFileName").Value.ToString();
         }
+        HttpContext.Response.Headers.Append("X-Content-Type-Options", "nosniff");
         await SendBytesAsync(fileBytes,fileName, contentType ?? "application/octet-stream", cancellation: cancellationToken);
 
     }

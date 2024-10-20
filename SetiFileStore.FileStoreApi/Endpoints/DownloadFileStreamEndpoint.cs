@@ -29,6 +29,7 @@ public class DownloadFileStreamEndpoint:Endpoint<FileDownloadRequest> {
         var tempFilePath = Directory.GetCurrentDirectory() + "\\Temp\\" + fileInfo.Filename;
         Stream destination = new FileStream(tempFilePath, FileMode.Create, FileAccess.ReadWrite);
         await this._fileStore.DownloadToStreamAsync(parsedObjectId,request.AppDomain,destination, ct);
+
         string? contentType = null;
         string? fileName = null;
         var metadata = fileInfo.Metadata;
@@ -37,11 +38,12 @@ public class DownloadFileStreamEndpoint:Endpoint<FileDownloadRequest> {
             fileName = metadata.GetElement("UntrustedFileName").Value.ToString();
         }
         destination.Seek(0, SeekOrigin.Begin);
-        
+        HttpContext.Response.Headers.Append("X-Content-Type-Options", "nosniff");
         await SendStreamAsync(destination,
             fileName,
             fileInfo.Length,
-            "application/octet-stream",enableRangeProcessing:true,
+            "application/octet-stream",
+            enableRangeProcessing:true,
             cancellation: ct);
     }
 }

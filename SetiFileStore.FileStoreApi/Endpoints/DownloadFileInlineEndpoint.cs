@@ -16,13 +16,10 @@ public class DownloadFileInlineEndpoint:Endpoint<FileDownloadRequest> {
 
     public override void Configure() {
         Get(HttpConstants.FileDownloadInlinePath);
-        //Get("/api/files/download/{fileId}");
         AllowAnonymous();
     }
 
     public override async Task HandleAsync(FileDownloadRequest request, CancellationToken cancellationToken) {
-        /*Console.WriteLine($"FileId: {request.FileId}");
-        Console.WriteLine($"AppDomain: {request.AppDomain}");*/
         var parsedObjectId = new ObjectId(request.FileId.Trim());
 
         var fileInfo = await this._fileStore.GetFileInfoById(parsedObjectId,request.AppDomain);
@@ -38,8 +35,7 @@ public class DownloadFileInlineEndpoint:Endpoint<FileDownloadRequest> {
             contentType = metadata.GetElement("ContentType").Value.ToString();
             fileName = metadata.GetElement("UntrustedFileName").Value.ToString();
         }
-        System.Net.Mime.ContentDisposition cd = new System.Net.Mime.ContentDisposition
-        {
+        System.Net.Mime.ContentDisposition cd = new System.Net.Mime.ContentDisposition {
             FileName = fileName,
             Inline = true  // false = prompt the user for downloading;  true = browser to try to show the file inline
         };
