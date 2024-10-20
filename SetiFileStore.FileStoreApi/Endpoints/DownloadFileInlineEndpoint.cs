@@ -41,7 +41,7 @@ public class DownloadFileInlineEndpoint:Endpoint<FileDownloadRequest> {
         };
         HttpContext.Response.Headers.Append("Content-Disposition", cd.ToString());
         HttpContext.Response.Headers.Append("X-Content-Type-Options", "nosniff");
-        await SendBytesAsync(fileBytes,"application/pdf", cancellation: cancellationToken);
+        await SendBytesAsync(fileBytes,fileName,"application/pdf", cancellation: cancellationToken);
 
     }
     
