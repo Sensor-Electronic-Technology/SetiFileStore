@@ -6,8 +6,8 @@ using FileStorage.Services;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.AddFastEndpoints()
+    .AddResponseCaching()
     .AddSwaggerGen()
     .AddEndpointsApiExplorer();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
@@ -27,8 +27,8 @@ builder.Services.AddSingleton<FileStorageService>();
 builder.Services.AddHostedService<AutoDeleteService>(); // Auto delete temp file
 
 var app = builder.Build();
-
-app.UseFastEndpoints()
+app.UseResponseCaching()
+    .UseFastEndpoints()
     .UseSwagger()
     .UseSwaggerUI();
 app.Run();

@@ -125,6 +125,29 @@ public class FileService {
         return response;
     }
 
+    public async Task<FileData?> DownloadFileStream(string fileId) {
+        var info=await this.GetFileInfo(fileId);
+        if (info == null) {
+            return null;
+        }
+        
+        using var client = this._clientFactory.CreateClient();
+        client.BaseAddress = this._baseUrl;
+        var domain=this._configuration["AppDomain"];
+        if (string.IsNullOrEmpty(domain)) {
+            throw new Exception(message: "Missing required configuration: AppDomain. " +
+                                         "Please check your appsettings.json file.");
+        }
+        
+        var requestStr=HttpConstants.FileDownloadStreamPath
+            .Replace("{fileId}",fileId)
+            .Replace("{appDomain}",domain);
+        await using var stream=await client.GetStreamAsync(requestStr);
+        using var memoryStream = new MemoryStream();
+        await stream.CopyToAsync(memoryStream);
+        return new FileData(info.Filename,memoryStream.ToArray());
+    }
+
     public async Task<bool> DeleteFile(string fileId) {
         using var client = this._clientFactory.CreateClient();
         client.BaseAddress = this._baseUrl;

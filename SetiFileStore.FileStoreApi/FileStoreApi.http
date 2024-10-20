@@ -11,4 +11,16 @@ Accept: application/json
 GET http://172.20.4.15:8080/api/file/download/purchase_request/6707d397b6699e1989a04023
 Accept: multipart/form-data
 
+###
+GET http://172.20.4.15:8080/api/file/download/stream/purchase_request/671539b3b6699e1989a0405c
+Accept: application/octet-stream
+
+###
+GET {{FileStoreApi_HostAddress}}/api/file/download/stream/purchase_request/671539b3b6699e1989a0405c
+Accept: application/octet-stream
+
+###
+GET http://172.20.4.15:8080/api/file/download/purchase_request/671539b3b6699e1989a0405c
+Accept: multipart/form-data
+
 
