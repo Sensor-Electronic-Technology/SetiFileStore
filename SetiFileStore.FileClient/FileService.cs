@@ -4,13 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SetiFileStore.Domain.Contracts;
 using SetiFileStore.Domain.Contracts.Responses;
-
 namespace SetiFileStore.FileClient;
-
 public record FileData(string Name,byte[] Data);
-
 public class FileService {
-    private readonly IConfiguration _configuration;
     private readonly IHttpClientFactory  _clientFactory;
     private readonly ILogger<FileService> _logger;
     private readonly Uri _baseUrl;
@@ -24,27 +20,16 @@ public class FileService {
                                          "Please check your appsettings.json file.");
         }
         this._baseUrl = new Uri(url);
-        this._configuration = configuration;
         this._clientFactory = clientFactory;
     }
     
-    /*public FileService(HttpClient client) {
-        this._client = client;
-        //this._configuration = configuration;
-    }*/
-    
-    public async Task<string?> UploadFile(FileData data) {
+    public async Task<string?> UploadFile(FileData data,string domain) {
         using var client = this._clientFactory.CreateClient();
         client.BaseAddress = this._baseUrl;
         using var form = new MultipartFormDataContent();
         using var fileContent = new ByteArrayContent(data.Data);
         fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
         form.Add(fileContent, "file",data.Name);
-        var domain=this._configuration["AppDomain"];
-        if (string.IsNullOrEmpty(domain)) {
-            throw new Exception(message: "Missing required configuration: AppDomain. " +
-                                         "Please check your appsettings.json file.");
-        }
         form.Add(new StringContent(domain), "appDomain");
         //form.Add(new StringContent("purchase_request"), "appDomain");
         HttpResponseMessage response = await client.PostAsync(HttpConstants.FileUploadPath, form);
@@ -56,7 +41,7 @@ public class FileService {
         }
     }
     
-    public async Task<List<string>> UploadMultipleFiles(List<FileData> input) {
+    public async Task<List<string>> UploadMultipleFiles(List<FileData> input,string domain) {
         using var client = this._clientFactory.CreateClient();
         client.BaseAddress = this._baseUrl;
         using var form = new MultipartFormDataContent();
@@ -64,11 +49,6 @@ public class FileService {
             var fileContent = new ByteArrayContent(fileInput.Data);
             fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
             form.Add(fileContent, "files", fileInput.Name);
-        }
-        var domain=this._configuration["AppDomain"];
-        if (string.IsNullOrEmpty(domain)) {
-            throw new Exception(message: "Missing required configuration: AppDomain. " +
-                                         "Please check your appsettings.json file.");
         }
         form.Add(new StringContent(domain), "appDomain");
         HttpResponseMessage response = await client.PostAsync(HttpConstants.MultiFileUploadPath, form);
@@ -80,15 +60,9 @@ public class FileService {
         }
     }
     
-    public async Task<FileData?> DownloadFile(string fileId) {
+    public async Task<FileData?> DownloadFile(string fileId,string domain) {
         using var client = this._clientFactory.CreateClient();
         client.BaseAddress = this._baseUrl;
-        var domain=this._configuration["AppDomain"];
-        if (string.IsNullOrEmpty(domain)) {
-            throw new Exception(message: "Missing required configuration: AppDomain. " +
-                                         "Please check your appsettings.json file.");
-        }
-        //var requestStr=HttpConstants.FileDownloadPath.Replace("{appDomain}","purchase_request").Replace("{fileId}",fileId);
         var requestStr=HttpConstants.FileDownloadPath
             .Replace("{appDomain}",domain)
             .Replace("{fileId}",fileId);
@@ -98,7 +72,6 @@ public class FileService {
             if (string.IsNullOrEmpty(fileName)) {
                 return null;
             }
-            /*await using var stream = await response.Content.ReadAsB();*/
             var fileBytes = await response.Content.ReadAsByteArrayAsync();
             return new FileData(fileName,fileBytes);
         } else {
@@ -107,15 +80,9 @@ public class FileService {
 
     }
     
-    public async Task<GetFileInfoResponse?> GetFileInfo(string fileId) {
+    public async Task<GetFileInfoResponse?> GetFileInfo(string fileId,string domain) {
         using var client = this._clientFactory.CreateClient();
         client.BaseAddress = this._baseUrl;
-        var domain=this._configuration["AppDomain"];
-        if (string.IsNullOrEmpty(domain)) {
-            throw new Exception(message: "Missing required configuration: AppDomain. " +
-                                         "Please check your appsettings.json file.");
-        }
-        //var requestStr=HttpConstants.FileInfoPath.Replace("{fileId}",fileId).Replace("{appDomain}","purchase_request");
         var requestStr=HttpConstants.FileInfoPath
             .Replace("{fileId}",fileId)
             .Replace("{appDomain}",domain);
@@ -123,20 +90,14 @@ public class FileService {
         return response;
     }
 
-    public async Task<FileData?> DownloadFileStream(string fileId) {
-        var info=await this.GetFileInfo(fileId);
+    public async Task<FileData?> DownloadFileStream(string fileId,string domain) {
+        var info=await this.GetFileInfo(fileId,domain);
         if (info == null) {
             return null;
         }
         
         using var client = this._clientFactory.CreateClient();
         client.BaseAddress = this._baseUrl;
-        var domain=this._configuration["AppDomain"];
-        if (string.IsNullOrEmpty(domain)) {
-            throw new Exception(message: "Missing required configuration: AppDomain. " +
-                                         "Please check your appsettings.json file.");
-        }
-        
         var requestStr=HttpConstants.FileDownloadStreamPath
             .Replace("{fileId}",fileId)
             .Replace("{appDomain}",domain);
@@ -146,14 +107,9 @@ public class FileService {
         return new FileData(info.Filename,memoryStream.ToArray());
     }
 
-    public async Task<bool> DeleteFile(string fileId) {
+    public async Task<bool> DeleteFile(string fileId,string domain) {
         using var client = this._clientFactory.CreateClient();
         client.BaseAddress = this._baseUrl;
-        var domain=this._configuration["AppDomain"];
-        if (string.IsNullOrEmpty(domain)) {
-            throw new Exception(message: "Missing required configuration: AppDomain. " +
-                                         "Please check your appsettings.json file.");
-        }
         var requestStr=HttpConstants.FileDeletePath
             .Replace("{appDomain}",domain)
             .Replace("{fileId}",fileId);

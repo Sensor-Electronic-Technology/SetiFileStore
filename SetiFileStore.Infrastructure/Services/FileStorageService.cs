@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using Domain;
+using Microsoft.AspNetCore.Http;
 using SetiFileStore.Domain;
 using SetiFileStore.Domain.Model;
 using MongoDB.Bson;
@@ -56,6 +57,12 @@ public class FileStorageService {
         var cursor = await this._domainBuckets[domain].FindAsync(new BsonDocument {{"_id", id}});
         
         //var cursor = await this._fileBucket.FindAsync(new BsonDocument {{"_id", id}});
+        var result = (await cursor.ToListAsync()).FirstOrDefault();
+        return result;
+    }
+    
+    public async Task<GridFSFileInfo?> GetFileInfoByName(string name,string domain) {
+        var cursor = await this._domainBuckets[domain].FindAsync(new BsonDocument {{"metadata.UntrustedFileName", name}});
         var result = (await cursor.ToListAsync()).FirstOrDefault();
         return result;
     }
