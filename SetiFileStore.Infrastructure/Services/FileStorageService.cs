@@ -195,6 +195,8 @@ public class FileStorageService {
                     if (!isFilledFirstBytes) {
                         var firstBytes = buffer.Take(64).ToArray();
                         var fileExtension = Path.GetExtension(fileName);
+                        /*var validator = new MagicBytesValidator.Services.Validator();
+                        var signatureResult = validator.IsValidAsync(new MemoryStream(firstBytes), fileExtension);*/
                         var signatureResult = this._validationService.ValidateFileSignature(firstBytes, fileExtension);
                         if(signatureResult!=ValidationFileEnum.Ok) {
                             try {

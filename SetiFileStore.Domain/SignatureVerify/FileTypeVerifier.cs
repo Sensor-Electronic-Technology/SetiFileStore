@@ -1,5 +1,6 @@
 ﻿using SetiFileStore.Domain.SignatureVerify.FileTypes;
 
+
 namespace SetiFileStore.Domain.SignatureVerify;
 
 public class FileTypeVerifier {
@@ -58,6 +59,9 @@ public class FileTypeVerifier {
                 return fileType;
             case ".xml":
                 fileType = new Xml();
+                return fileType;
+            case ".svg":
+                fileType = new Svg();
                 return fileType;
             default:
                 break;

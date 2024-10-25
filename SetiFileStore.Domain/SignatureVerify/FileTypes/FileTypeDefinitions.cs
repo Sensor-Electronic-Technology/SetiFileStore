@@ -22,6 +22,17 @@ public sealed class Png : FileType {
     }
 }
 
+public sealed class Svg : FileType {
+    public Svg() {
+        Name = "SVG";
+        Description = "PNG Image";
+        AddExtensions("png");
+        AddSignatures(
+            "<?xml version=\"1.0\"?>"u8.ToArray()
+        );
+    }
+}
+
 public sealed class Xls : FileType {
     public Xls() {
         Name = "XLS";
