@@ -71,8 +71,6 @@ public class FileService {
                                          "Please check your appsettings.json file.");
         }
         form.Add(new StringContent(domain), "appDomain");
-        //form.Add(new StringContent("purchase_request"), "appDomain");
-        /*form.Add(new StringContent(domain), "appDomain");*/
         HttpResponseMessage response = await client.PostAsync(HttpConstants.MultiFileUploadPath, form);
         if (response.IsSuccessStatusCode) {
             var content =await response.Content.ReadFromJsonAsync<MultipleFileUploadResponse>();
@@ -156,9 +154,6 @@ public class FileService {
             throw new Exception(message: "Missing required configuration: AppDomain. " +
                                          "Please check your appsettings.json file.");
         }
-        /*var requestStr=HttpConstants.FileDeletePath
-            .Replace("{appDomain}","purchase_request")
-            .Replace("{fileId}",fileId);*/
         var requestStr=HttpConstants.FileDeletePath
             .Replace("{appDomain}",domain)
             .Replace("{fileId}",fileId);

@@ -17,7 +17,6 @@ public class FileUploadEndpoint:Endpoint<FileUploadRequest, FileUploadResponse>
 
     public override void Configure() {
         Post(HttpConstants.FileUploadPath);
-        //Post("api/file/upload");
         AllowAnonymous();
         AllowFileUploads();
     }
