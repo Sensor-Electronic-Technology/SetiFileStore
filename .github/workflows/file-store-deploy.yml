@@ -1,4 +1,4 @@
-name: Webapp Deploy
+name: File-Store-Deploy
 on:
   push:
     branches: [ "master" ]
